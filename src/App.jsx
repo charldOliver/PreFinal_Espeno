@@ -38,7 +38,7 @@ const defaultProducts = [
     category: "Cables",
     image: cableImg,
     price: 12.99,
-    stock: 6,
+    stock: 20,
     rating: 4.6,
     description: "Durable nylon braided USB-C cable with fast charging support.",
     specs: "1.5m length, 60W PD support, braided protection",
@@ -215,7 +215,7 @@ export default function App() {
           })}
         </div>
 
-        {/* CART */}
+       
         <aside className="cart">
           <h2>Shopping Cart</h2>
           {cartItems.length === 0 && <p>No items yet.</p>}
