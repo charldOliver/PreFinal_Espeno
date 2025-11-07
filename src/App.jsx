@@ -340,7 +340,7 @@ export default function App() {
         </div>
       )}
 
-      {/* ====== Add Product Modal ====== */}
+     
       {showAddForm && (
         <div className="modal-overlay" onClick={() => setShowAddForm(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
