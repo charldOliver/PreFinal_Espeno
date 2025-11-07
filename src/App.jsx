@@ -83,6 +83,17 @@ export default function App() {
   const [cartItems, setCartItems] = useState([]);
   const [quantities, setQuantities] = useState({});
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    category: "",
+    price: "",
+    stock: "",
+    rating: "",
+    description: "",
+    specs: "",
+    image: "",
+  });
 
   const handleQuantityChange = (productId, delta, stock) => {
     setQuantities((prev) => {
@@ -139,10 +150,50 @@ export default function App() {
     0
   );
 
+  const handleAddProduct = (e) => {
+    e.preventDefault();
+    const nextId = products.length + 1;
+    const productToAdd = {
+      ...newProduct,
+      id: nextId,
+      price: parseFloat(newProduct.price),
+      stock: parseInt(newProduct.stock),
+      rating: parseFloat(newProduct.rating) || 0,
+      image: newProduct.image || headphoneImg,
+    };
+    setProducts([...products, productToAdd]);
+    setNewProduct({
+      name: "",
+      category: "",
+      price: "",
+      stock: "",
+      rating: "",
+      description: "",
+      specs: "",
+      image: "",
+    });
+    setShowAddForm(false);
+  };
+
   return (
     <main className="app">
-      <header className="app-header">
+      <header className="app-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1>Product Manager</h1>
+        <button
+          className="add-product-btn"
+          onClick={() => setShowAddForm(true)}
+          style={{
+            backgroundColor: "#007bff",
+            color: "white",
+            border: "none",
+            padding: "10px 16px",
+            borderRadius: "8px",
+            cursor: "pointer",
+            fontWeight: "bold",
+          }}
+        >
+          ➕ Add New Product
+        </button>
       </header>
 
       <div className="content">
@@ -215,7 +266,6 @@ export default function App() {
           })}
         </div>
 
-       
         <aside className="cart">
           <h2>Shopping Cart</h2>
           {cartItems.length === 0 && <p>No items yet.</p>}
@@ -250,6 +300,7 @@ export default function App() {
         </aside>
       </div>
 
+      {/* ====== Product Details Modal ====== */}
       {selectedProduct && (
         <div className="modal-overlay" onClick={() => setSelectedProduct(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -285,6 +336,71 @@ export default function App() {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ====== Add Product Modal ====== */}
+      {showAddForm && (
+        <div className="modal-overlay" onClick={() => setShowAddForm(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setShowAddForm(false)}>✕</button>
+            <h2>Add New Product</h2>
+            <form className="add-form" onSubmit={handleAddProduct}>
+              <input
+                type="text"
+                placeholder="Product Name"
+                value={newProduct.name}
+                onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Category"
+                value={newProduct.category}
+                onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                required
+              />
+              <input
+                type="number"
+                placeholder="Price"
+                step="0.01"
+                value={newProduct.price}
+                onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                required
+              />
+              <input
+                type="number"
+                placeholder="Stock"
+                value={newProduct.stock}
+                onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value })}
+                required
+              />
+              <input
+                type="number"
+                placeholder="Rating"
+                step="0.1"
+                value={newProduct.rating}
+                onChange={(e) => setNewProduct({ ...newProduct, rating: e.target.value })}
+              />
+              <textarea
+                placeholder="Description"
+                value={newProduct.description}
+                onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+              ></textarea>
+              <textarea
+                placeholder="Specifications"
+                value={newProduct.specs}
+                onChange={(e) => setNewProduct({ ...newProduct, specs: e.target.value })}
+              ></textarea>
+              <input
+                type="text"
+                placeholder="Image URL (optional)"
+                value={newProduct.image}
+                onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
+              />
+              <button type="submit" className="add">Add Product</button>
+            </form>
           </div>
         </div>
       )}
